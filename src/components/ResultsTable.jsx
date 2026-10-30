@@ -3,8 +3,8 @@ import { money, pct } from '../utils/format.js';
 /** Payout breakdown per class at the selected exit value. */
 export default function ResultsTable({ rows, colors, exit }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
+    <div className="table-shell">
+      <table className="min-w-[620px] w-full text-sm">
         <thead>
           <tr className="border-b border-ink-700 text-left text-[11px] uppercase tracking-wider text-zinc-500">
             <th className="py-2">Class</th><th>Owns</th><th>Preference</th><th>Pro-rata</th><th>Total</th><th>Of exit</th>

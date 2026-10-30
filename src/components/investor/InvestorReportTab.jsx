@@ -10,23 +10,23 @@ export default function InvestorReportTab({ inv, summary, plan }) {
   const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const T = ({ head, rows }) => (
     <table className="mb-6 w-full border-collapse text-[12px]">
-      <thead><tr>{head.map((h) => <th key={h} className="border-b-2 border-zinc-800 py-1.5 text-left font-semibold">{h}</th>)}</tr></thead>
+      <thead><tr>{head.map((h, i) => <th key={`${h}-${i}`} className="border-b-2 border-zinc-800 py-1.5 text-left font-semibold">{h}</th>)}</tr></thead>
       <tbody>{rows.map((r, i) => <tr key={i}>{r.map((c, j) => <td key={j} className="border-b border-zinc-200 py-1.5 font-mono">{c}</td>)}</tr>)}</tbody>
     </table>
   );
   return (
     <div>
-      <div className="no-print mb-4 flex items-center justify-between">
+      <div className="no-print mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
         <p className="text-sm text-zinc-400">This preview prints as-is. Choose "Save as PDF" in the print dialog.</p>
         <Button primary onClick={() => window.print()}><Printer size={14} /> Print / Save PDF</Button>
       </div>
-      <article className="report mx-auto max-w-4xl rounded-xl bg-white p-10 text-zinc-900 shadow-2xl">
+      <article className="report mx-auto max-w-4xl overflow-x-auto rounded-xl bg-white p-5 text-zinc-900 shadow-2xl sm:p-10">
         <header className="mb-8 border-b-4 border-zinc-900 pb-4">
           <div className="text-xs uppercase tracking-[0.2em] text-zinc-500">Portfolio Performance Report</div>
           <h1 className="text-3xl font-bold">{inv.investor}</h1>
           <div className="text-xs text-zinc-500">Prepared {date} · PrefStack</div>
         </header>
-        <div className="mb-8 grid grid-cols-4 gap-3 text-center">
+        <div className="mb-8 grid min-w-[520px] grid-cols-4 gap-3 text-center">
           {[['Paid-in', money(summary.invested)], ['TVPI', x(summary.tvpi)], ['DPI', x(summary.dpi)], ['Net IRR', irr(summary.irr)]].map(([k, v]) => (
             <div key={k} className="rounded border border-zinc-300 py-3"><div className="text-[10px] uppercase tracking-wider text-zinc-500">{k}</div><div className="font-mono text-xl font-semibold">{v}</div></div>
           ))}
