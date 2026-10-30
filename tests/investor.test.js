@@ -70,3 +70,11 @@ test('Term sheet payout: 1x non-participating takes pref at low exit, converts a
   close(hi.payout, 10e6, 1e-3); assert.equal(hi.converted, true); close(hi.moic, 10, 1e-6);
   close(hi.irr, Math.pow(10, 1 / 5) - 1, 1e-9);
 });
+
+test('Exit proceeds: pref floor vs as-converted, and returner exit', async () => {
+  const { exitProceeds, returnerExit } = await import('../src/utils/investor.js');
+  close(exitProceeds({ ownershipPct: 1, exit: 10e6, prefAmount: 250e3 }), 250e3);
+  close(exitProceeds({ ownershipPct: 1, exit: 100e6, prefAmount: 250e3 }), 1e6);
+  close(exitProceeds({ ownershipPct: 1, exit: 100e3, prefAmount: 250e3 }), 100e3);
+  close(returnerExit(0.5, 1e6), 200e6);
+});
