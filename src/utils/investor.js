@@ -136,3 +136,18 @@ export function termSheetPayout(sheet, base, exit, years) {
   const moic = inv ? you.total / inv : 0;
   return { payout: you.total, converted: you.converted, moic, irr: years > 0 && moic > 0 ? Math.pow(moic, 1 / years) - 1 : null };
 }
+
+/**
+ * Single-position exit proceeds for a 1x-style non-participating holder:
+ * the greater of your preference and your as-converted share, never more than the exit.
+ */
+export function exitProceeds({ ownershipPct, exit, prefAmount = 0 }) {
+  const asConverted = (n(ownershipPct) / 100) * n(exit);
+  return Math.min(n(exit), Math.max(n(prefAmount), asConverted));
+}
+
+/** Exit value at which one position alone returns `target` dollars (the "portfolio returner"). */
+export function returnerExit(ownershipPct, target) {
+  const own = n(ownershipPct) / 100;
+  return own > 0 ? n(target) / own : Infinity;
+}
