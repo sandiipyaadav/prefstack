@@ -1,6 +1,6 @@
 # PrefStack
 
-**See exactly who gets paid what at exit.** A fast, private liquidation-preference waterfall simulator for founders, early employees, and angels.
+**See exactly who gets paid what at exit.** A fast, private founder equity toolkit covering cap table, SAFEs and notes, round modeling, exit waterfall, option value, and investor reports. Runs 100% in the browser.
 
 ## Problem
 Headline valuations lie. A $40M acquisition of a company that raised $18M with a 1.5x participating Series A can leave founders with far less than their ownership % suggests. Founders usually find out during M&A, when it's too late to negotiate. Today the answer lives in:
@@ -9,31 +9,40 @@ Headline valuations lie. A $40M acquisition of a company that raised $18M with a
 - **Free SAFE calculators (YC, Binderwork, Equidam)**: plenty of them, but they stop at conversion and don't model the exit waterfall.
 
 ## Audience
-Venture-backed founders weighing term sheets or acquisition offers, startup CFOs, angels, and senior hires judging their equity.
+Venture-backed founders weighing term sheets or acquisition of## Features (one shared, persisted cap table across six tabs)
+1. **Cap table**: share classes, common or preferred, unissued option pool flag, outstanding and fully diluted %, ownership bar
+2. **SAFEs & notes**: post-money and pre-money SAFEs, convertible notes with simple interest, caps, discounts, and MFN (inherits the best cap and discount). Shows cap price vs discount price and which one wins
+3. **Round modeling**: pre-money, new money, and target post-money pool (pool shuffle). Solves price per share, conversions, and top-up together. Before/after table and a one-click "close round" that writes the new classes into the cap table
+4. **Exit waterfall**: preference multiples, seniority tiers, participation caps, automatic convert-vs-preference decisions, and a payout curve
+5. **Options**: what a grant is worth after preferences (real vs naive $/share), exercise cost, tax, net, and break-even exit
+6. **Report**: investor-ready print/PDF report. JSON import/export, localStorage persistence
 
-## Features
-- Multiple share classes: common and preferred
-- Preference multiples, seniority tiers (pari passu within a tier), participating with or without a cap
-- Automatic convert-vs-take-preference decision for each class (iterated best response)
-- Exit slider plus a payout-vs-exit curve for every class
-- Flags classes that get less (red) or more (green) than their ownership %
-- CSV export, localStorage persistence, no backend, no account
+## Verification
+- `npm test` runs 10 unit sanity checks (Node test runner). They cover the waterfall summing to the exit, conversion, seniority, a Binderwork reference cap table reproduced to the share, post-money SAFE additivity, pre-money SAFEs, discounts, note interest, the pool top-up target, MFN, applyRound conservation, and option break-even
+- `npm run build` passes, and a headless Chrome smoke test of every tab found no console errors
 
 ## Stack
-Vite + React 18, Tailwind CSS 3, lucide-react. Pure-JS engine in `src/utils/waterfall.js`.
+Vite + React 18, Tailwind CSS 3, lucide-react. Pure-JS engines in `src/utils/` (`waterfall.js`, `conversion.js`, `options.js`).
 
 ## Setup
 ```bash
 npm install
 npm run dev     # local dev server
+npm test        # engine unit tests
 npm run build   # production build in dist/
 ```
 
 ## Structure
 ```
 src/
-  components/  HolderEditor, ResultsTable, PayoutChart
-  utils/       waterfall.js (engine), storage.js, format.js, defaults.js
+  components/  CapTableTab, ConversionsTab, RoundTab, WaterfallTab, OptionsTab, ReportTab, HolderEditor, ResultsTable, PayoutChart, ui
+  utils/       waterfall.js, conversion.js, options.js, storage.js, defaults.js, format.js
+  styles/      index.css (Tailwind + print styles)
+  App.jsx, main.jsx
+tests/         engine.test.js
+```
+
+lts.js
   styles/      index.css (Tailwind)
   App.jsx, main.jsx
 ```
