@@ -7,3 +7,13 @@
   .label { @apply mb-1 block text-[11px] uppercase tracking-wider text-zinc-500; }
   .card { @apply rounded-xl border border-ink-700 bg-ink-800/60 p-5; }
 }
+
+/* Print: only the report, on white paper. */
+@media print {
+  @page { margin: 14mm; }
+  html, body, #root, .min-h-screen { background: #fff !important; }
+  .no-print { display: none !important; }
+  main { padding: 0 !important; max-width: none !important; }
+  .report { box-shadow: none !important; padding: 0 !important; border-radius: 0 !important; max-width: none !important; }
+  .report table { page-break-inside: avoid; }
+}
