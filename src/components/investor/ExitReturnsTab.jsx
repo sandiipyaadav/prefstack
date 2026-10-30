@@ -14,18 +14,18 @@ export default function ExitReturnsTab({ inv, setInv, summary }) {
   });
   const total = rows.reduce((s, r) => s + r.total, 0);
   return (
-    <div className="space-y-5">
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat label="Paid-in" value={money(summary.invested)} />
         <Stat label="Scenario proceeds" value={money(total)} accent />
-        <Stat label="Scenario multiple" value={`${(summary.invested ? total / summary.invested : 0).toFixed(2)}x`} accent />
-        <label className="flex items-center justify-center gap-2 rounded-lg bg-ink-900 text-xs">
-          <input type="checkbox" className="accent-[#c6ff3d]" checked={prefFloor} onChange={(e) => setPrefFloor(e.target.checked)} /> 1x pref floor on cost
+        <Stat label="Scenario multiple" value={`${(summary.invested ? total / summary.invested : 0).toFixed(2)}x`} accent tip="Total modeled proceeds divided by total paid-in capital." />
+        <label className="stat flex cursor-pointer items-center justify-center gap-2 text-xs text-zinc-300">
+          <input type="checkbox" checked={prefFloor} onChange={(e) => setPrefFloor(e.target.checked)} /> 1x pref floor on cost
         </label>
       </div>
-      <Card title="Exit what-if per company (blank = hold at current mark)">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+      <Card title="Exit what-if by company" description="Enter a company exit value, or leave it at zero to hold the current mark.">
+        <div className="table-shell">
+          <table className="min-w-[820px] w-full text-sm">
             <thead><tr className="border-b border-ink-700 text-left text-[11px] uppercase tracking-wider text-zinc-500"><th className="py-2">Company</th><th>Own %</th><th>Exit value</th><th>Your proceeds</th><th>+ Past distrib.</th><th>MOIC</th><th>Exit to return portfolio</th></tr></thead>
             <tbody className="font-mono">
               {rows.map((r) => (

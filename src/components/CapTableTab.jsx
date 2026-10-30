@@ -14,31 +14,34 @@ export default function CapTableTab({ state, update, colors }) {
   const setHolder = (h) => update({ holders: holders.map((x) => (x.id === h.id ? h : x)) });
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
+    <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
       <section className="space-y-3">
-        <Card title="Company">
+        <Card title="Company" description="This name appears across your workspace and report.">
           <input className="input font-sans" value={state.company} onChange={(e) => update({ company: e.target.value })} aria-label="Company name" />
         </Card>
         {holders.map((h) => (
           <HolderEditor key={h.id} holder={h} color={colors[h.id]} onChange={setHolder} onRemove={() => update({ holders: holders.filter((x) => x.id !== h.id) })} />
         ))}
         <div className="flex gap-2">
-          <button onClick={() => update({ holders: [...holders, newHolder('preferred')] })} className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-dashed border-ink-600 py-2 text-sm hover:border-accent hover:text-accent"><Plus size={15} /> Preferred</button>
-          <button onClick={() => update({ holders: [...holders, newHolder('common')] })} className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-dashed border-ink-600 py-2 text-sm hover:border-accent hover:text-accent"><Plus size={15} /> Common</button>
+          <button type="button" onClick={() => update({ holders: [...holders, newHolder('preferred')] })} className="add-tile flex-1"><Plus size={15} /> Preferred class</button>
+          <button type="button" onClick={() => update({ holders: [...holders, newHolder('common')] })} className="add-tile flex-1"><Plus size={15} /> Common class</button>
         </div>
       </section>
       <section className="space-y-5">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Stat label="Fully diluted" value={int(fd)} />
-          <Stat label="Outstanding" value={int(outstanding)} />
-          <Stat label="Unissued pool" value={pct(fd ? pool / fd : 0)} />
-          <Stat label="Capital raised" value={money(raised)} accent />
+          <Stat label="Fully diluted" value={int(fd)} tip="All outstanding shares plus the unissued option pool." />
+          <Stat label="Outstanding" value={int(outstanding)} tip="Shares currently issued to holders, excluding the unissued pool." />
+          <Stat label="Unissued pool" value={pct(fd ? pool / fd : 0)} tip="Options reserved for future grants as a share of fully diluted equity." />
+          <Stat label="Capital raised" value={money(raised)} accent tip="Total invested capital recorded across preferred share classes." />
         </div>
-        <Card title="Ownership">
-          <div className="mb-4 flex h-3 overflow-hidden rounded-full bg-ink-900">
-            {holders.map((h) => <div key={h.id} style={{ width: `${fd ? (h.shares / fd) * 100 : 0}%`, background: colors[h.id] }} title={h.name} />)}
+        <Card title="Ownership" description="Fully diluted ownership across all issued classes and the available option pool.">
+          <div className="mb-5 rounded-xl border border-white/[0.06] bg-ink-950/60 p-3">
+            <div className="flex h-7 overflow-hidden rounded-md bg-ink-900" aria-label="Fully diluted ownership distribution">
+              {holders.map((h) => <div key={h.id} className="group relative transition hover:brightness-125" style={{ width: `${fd ? (h.shares / fd) * 100 : 0}%`, background: colors[h.id] }} title={`${h.name}: ${pct(fd ? h.shares / fd : 0)}`} />)}
+            </div>
           </div>
-          <table className="w-full text-sm">
+          <div className="table-shell">
+          <table className="min-w-[620px] w-full text-sm">
             <thead><tr className="border-b border-ink-700 text-left text-[11px] uppercase tracking-wider text-zinc-500"><th className="py-2">Class</th><th>Shares</th><th>Outstanding %</th><th>Fully diluted %</th></tr></thead>
             <tbody className="font-mono">
               {holders.map((h) => (
@@ -51,6 +54,7 @@ export default function CapTableTab({ state, update, colors }) {
               ))}
             </tbody>
           </table>
+          </div>
         </Card>
       </section>
     </div>
